@@ -5,6 +5,7 @@ const nextConfig = {
 	images: {
 		domains: ["avatars.githubusercontent.com", "i.imgur.com"],
 	},
+	output: "standalone",
 };
 
 module.exports = nextConfig;
