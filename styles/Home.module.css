@@ -30,9 +30,32 @@
 	gap: 1rem;
 }
 
-.main > :first-child {
+.picture,
+.profileCoinButton {
 	border-radius: 100%;
 	box-shadow: 0 0 50px rgba(124, 124, 138, 0.2);
+}
+
+.profileCoinButton {
+	width: 200px;
+	height: 200px;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	cursor: pointer;
+	display: block;
+	overflow: hidden;
+	touch-action: manipulation;
+}
+
+.profileCoinButton canvas {
+	display: block;
+	outline: none;
+}
+
+.profileCoinButton:focus-visible {
+	outline: 2px solid #eaeaea;
+	outline-offset: 6px;
 }
 
 .title {
@@ -69,6 +92,34 @@
 	align-items: center;
 	justify-content: center;
 	gap: 1rem;
+}
+
+.linksShell {
+	position: relative;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.linksBackdrop {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	pointer-events: none;
+	overflow: hidden;
+}
+
+.linksBackdrop canvas {
+	display: block;
+	width: 100% !important;
+	height: 100% !important;
+	outline: none;
+}
+
+.linksShell > .row {
+	position: relative;
+	z-index: 1;
 }
 
 .card {

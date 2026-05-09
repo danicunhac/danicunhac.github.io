@@ -5,21 +5,38 @@ import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 
 import {
-	LinkedinLogo,
-	GithubLogo,
-	InstagramLogo,
-	ArrowSquareOut,
-	Eye,
-	YoutubeLogo,
-	TwitterLogo,
+	LinkedinLogoIcon,
+	GithubLogoIcon,
+	InstagramLogoIcon,
+	ArrowSquareOutIcon,
+	EyeIcon,
+	YoutubeLogoIcon,
+	TwitterLogoIcon,
 } from "@phosphor-icons/react";
-
-const CountUp = dynamic(() => import("react-countup"), { ssr: false });
 
 import styles from "../styles/Home.module.css";
 
+const CountUp = dynamic(() => import("react-countup"), { ssr: false });
+const ProfileCoinCanvas = dynamic(
+	() => import("../components/home/ProfileCoinCanvas"),
+	{
+		ssr: false,
+		loading: () => (
+			<Image
+				src="/hero.png"
+				width={200}
+				height={200}
+				alt="Picture of Daniel Costa"
+				className={styles.picture}
+				priority
+			/>
+		),
+	},
+);
+
 const Home: NextPage<{ views: number }> = ({ views }) => {
 	const [isCounted, setIsCounted] = useState(false);
+	const [coinSpinCount, setCoinSpinCount] = useState(0);
 	const viewsCardRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -32,7 +49,7 @@ const Home: NextPage<{ views: number }> = ({ views }) => {
 					setIsCounted(true);
 				}
 			},
-			{ threshold: 0.2 }
+			{ threshold: 0.2 },
 		);
 
 		observer.observe(el);
@@ -47,14 +64,14 @@ const Home: NextPage<{ views: number }> = ({ views }) => {
 			</Head>
 
 			<main className={styles.main}>
-				<Image
-					src="/hero.png"
-					width={200}
-					height={200}
-					alt="Picture of Daniel Costa"
-					className={styles.picture}
-					priority
-				/>
+				<button
+					type="button"
+					className={styles.profileCoinButton}
+					onClick={() => setCoinSpinCount((count) => count + 1)}
+					aria-label="Spin profile picture of Daniel Costa"
+				>
+					<ProfileCoinCanvas spinCount={coinSpinCount} />
+				</button>
 
 				<div className={styles.info}>
 					<h1 className={styles.title}>Daniel Costa</h1>
@@ -67,31 +84,31 @@ const Home: NextPage<{ views: number }> = ({ views }) => {
 							href="https://linkedin.com/in/danielcunhac"
 							className={styles.card}
 						>
-							<LinkedinLogo size={24} weight="duotone" />
+							<LinkedinLogoIcon size={24} weight="duotone" />
 							<span>/in/danielcunhac</span>
-							<ArrowSquareOut size={24} />
+							<ArrowSquareOutIcon size={24} />
 						</a>
 						<a href="https://github.com/danicunhac" className={styles.card}>
-							<GithubLogo size={24} weight="duotone" />
+							<GithubLogoIcon size={24} weight="duotone" />
 							<span>/danicunhac</span>
-							<ArrowSquareOut size={24} />
+							<ArrowSquareOutIcon size={24} />
 						</a>
 						<a href="https://instagram.com/dancunhac" className={styles.card}>
-							<InstagramLogo size={24} weight="duotone" />
+							<InstagramLogoIcon size={24} weight="duotone" />
 							<span>@dancunhac</span>
-							<ArrowSquareOut size={24} />
+							<ArrowSquareOutIcon size={24} />
 						</a>
 					</div>
 					<div className={styles.grid}>
 						<a href="https://youtube.com/@danicunhac" className={styles.card}>
-							<YoutubeLogo size={24} weight="duotone" />
+							<YoutubeLogoIcon size={24} weight="duotone" />
 							<span>/@danicunhac</span>
-							<ArrowSquareOut size={24} />
+							<ArrowSquareOutIcon size={24} />
 						</a>
 						<a href="https://twitter.com/danicunhac" className={styles.card}>
-							<TwitterLogo size={24} weight="duotone" />
+							<TwitterLogoIcon size={24} weight="duotone" />
 							<span>@danicunhac</span>
-							<ArrowSquareOut size={24} />
+							<ArrowSquareOutIcon size={24} />
 						</a>
 						<CountUp
 							decimal="."
@@ -103,7 +120,7 @@ const Home: NextPage<{ views: number }> = ({ views }) => {
 						>
 							{({ countUpRef }) => (
 								<div ref={viewsCardRef} className={styles.card}>
-									<Eye size={24} weight="duotone" />
+									<EyeIcon size={24} weight="duotone" />
 									<span>Views</span>
 									<span className={styles.count} ref={countUpRef} />
 								</div>
