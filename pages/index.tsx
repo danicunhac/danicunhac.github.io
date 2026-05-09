@@ -17,26 +17,9 @@ import {
 import styles from "../styles/Home.module.css";
 
 const CountUp = dynamic(() => import("react-countup"), { ssr: false });
-const ProfileCoinCanvas = dynamic(
-	() => import("../components/home/ProfileCoinCanvas"),
-	{
-		ssr: false,
-		loading: () => (
-			<Image
-				src="/hero.png"
-				width={200}
-				height={200}
-				alt="Picture of Daniel Costa"
-				className={styles.picture}
-				priority
-			/>
-		),
-	},
-);
 
 const Home: NextPage<{ views: number }> = ({ views }) => {
 	const [isCounted, setIsCounted] = useState(false);
-	const [coinSpinCount, setCoinSpinCount] = useState(0);
 	const viewsCardRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -64,14 +47,14 @@ const Home: NextPage<{ views: number }> = ({ views }) => {
 			</Head>
 
 			<main className={styles.main}>
-				<button
-					type="button"
-					className={styles.profileCoinButton}
-					onClick={() => setCoinSpinCount((count) => count + 1)}
-					aria-label="Spin profile picture of Daniel Costa"
-				>
-					<ProfileCoinCanvas spinCount={coinSpinCount} />
-				</button>
+				<Image
+					src="/hero.png"
+					width={200}
+					height={200}
+					alt="Picture of Daniel Costa"
+					className={styles.picture}
+					priority
+				/>
 
 				<div className={styles.info}>
 					<h1 className={styles.title}>Daniel Costa</h1>
