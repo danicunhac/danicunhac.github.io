@@ -1,11 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	reactStrictMode: false,
-	swcMinify: true,
+	reactStrictMode: true,
 	images: {
-		domains: ["avatars.githubusercontent.com", "i.imgur.com"],
+		unoptimized: true,
+		remotePatterns: [
+			{
+				protocol: "https",
+				hostname: "i.imgur.com",
+				pathname: "/**",
+			},
+		],
 	},
-	output: "standalone",
+	output: "export",
 };
 
 module.exports = nextConfig;

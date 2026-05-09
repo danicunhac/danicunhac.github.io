@@ -1,40 +1,50 @@
 import type { AppProps } from "next/app";
 import { Analytics } from "@vercel/analytics/react";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 import "../styles/globals.css";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-const supabase = createClient(
-	process.env.NEXT_PUBLIC_SUPABASE_URL as string,
-	process.env.NEXT_PUBLIC_SUPABASE_KEY as string
-);
+function getSupabase(): SupabaseClient | null {
+	const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+	const key = process.env.NEXT_PUBLIC_SUPABASE_KEY;
+	if (!url || !key) return null;
+	return createClient(url, key);
+}
 
 function MyApp({ Component, pageProps }: AppProps) {
 	const [views, setViews] = useState(0);
 
-	const getViews = useCallback(async () => {
-		const { data } = await supabase
-			.from("views")
-			.select("count")
-			.limit(1)
-			.single();
-
-		setViews(data?.count);
-	}, []);
-
-	const updateViews = useCallback(async () => {
-		await supabase.rpc("increment", {
-			slug_text: "/",
-		});
-	}, []);
-
 	useEffect(() => {
-		getViews();
-		if (process.env.NODE_ENV === "production") {
-			updateViews();
+		let cancelled = false;
+
+		async function syncViews() {
+			const supabase = getSupabase();
+			if (!supabase) return;
+
+			const { data } = await supabase
+				.from("views")
+				.select("count")
+				.limit(1)
+				.single();
+
+			if (!cancelled) {
+				setViews(data?.count ?? 0);
+			}
+
+			if (process.env.NODE_ENV === "production" && !cancelled) {
+				await supabase.rpc("increment", {
+					slug_text: "/",
+				});
+			}
 		}
-	}, [updateViews, getViews]);
+
+		void syncViews();
+
+		return () => {
+			cancelled = true;
+		};
+	}, []);
 
 	return (
 		<>
